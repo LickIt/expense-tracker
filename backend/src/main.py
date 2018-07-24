@@ -1,22 +1,25 @@
-from typing import List
+from typing import List, ClassVar
 from sqlalchemy.orm import Session
-from .entities.entity import Session as SessionFactory, engine, Base
-from .entities.user import User
+from flask import Flask, jsonify, request
+from flask.json import loads
+from .entities import SessionFactory, engine, Base, User, UserSchema
+from .services import dbservices, UserService
 
 Base.metadata.create_all(engine)
-session: Session = SessionFactory()
 
-users = session.query(User).all()
+app = Flask(__name__)
 
-if len(users) == 0:
-    print("crearing user")
-    user = User("test", "123")
-    session.add(user)
-    session.commit()
-    session.close()
 
-    users: List[User] = session.query(User).all()
+@app.route('/api/users')
+@dbservices(user_svc=UserService)
+def get_users(user_svc: UserService):
+    users = user_svc.get_users()
+    return jsonify(users)
 
-print("### Users")
-for user in users:
-    print(f"{user.username}, {user.password}")
+
+@app.route('/api/users', methods=["POST"])
+@dbservices(user_svc=UserService)
+def post_users(user_svc: UserService):
+    data = UserSchema(exclude=('id')).load(request.get_json()).data
+    user = user_svc.create_user(data)
+    return jsonify(user), 201
