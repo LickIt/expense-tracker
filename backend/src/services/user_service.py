@@ -8,7 +8,10 @@ from .data_service import DataService
 
 class UserService(DataService):
     def get_users(self) -> Dict[str, Any]:
-        users = self.session.query(User).all()
+        users = self.session \
+            .query(User) \
+            .order_by(User.id) \
+            .all()
         schema: UserSchemaType = UserSchema(many=True)
         return schema.dump(users).data
 
@@ -19,6 +22,24 @@ class UserService(DataService):
         self.session.add(user)
         self.session.commit()
 
+        schema: UserSchemaType = UserSchema()
+        return schema.dump(user).data
+
+    def patch_user(self, data: Dict[str, Any]):
+        userid = data["id"]
+        user: User = self.session \
+            .query(User) \
+            .filter_by(id=userid) \
+            .first()
+
+        patch = User(**data)
+        if patch.username and user.username != patch.username:
+            user.username = patch.username
+
+        if patch.password and user.password != self.hash_password(patch.password):
+            user.password = self.hash_password(patch.password)
+
+        self.session.commit()
         schema: UserSchemaType = UserSchema()
         return schema.dump(user).data
 
