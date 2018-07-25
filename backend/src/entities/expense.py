@@ -14,8 +14,8 @@ class Expense(Entity, Base):
     categoryid = Column(Integer(), ForeignKey("categories.id"), nullable=False)
     notes = Column(String(255), nullable=True)
 
-    def __init__(self, amount, timestamp, userid, categoryid, notes=None):
-        Entity.__init__(self)
+    def __init__(self, id=None, amount=None, timestamp=None, userid=None, categoryid=None, notes=None):
+        Entity.__init__(self, id)
         self.amount = amount
         self.timestamp = timestamp
         self.userid = userid

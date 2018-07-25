@@ -5,7 +5,7 @@ from .data_service import DataService
 
 
 class CategoryService(DataService):
-    def get_categories(self, userid: int) -> Dict[str, Any]:
+    def get_categories_by_user(self, userid: int) -> Dict[str, Any]:
         categories = self.session \
             .query(Category) \
             .filter_by(userid=userid) \
@@ -32,6 +32,9 @@ class CategoryService(DataService):
         patch = Category(**data)
         if patch.name and category.name != patch.name:
             category.name = patch.name
+
+        if "color" in data.keys and category.color != patch.color:
+            category.color = patch.color
 
         self.session.commit()
         schema: CategorySchemaType = CategorySchema()

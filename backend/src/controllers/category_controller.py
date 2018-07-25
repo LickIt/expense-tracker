@@ -9,7 +9,7 @@ category_api = Blueprint("categories", "categories",
 @category_api.route("/<int:userid>")
 @dbservices(category_svc=CategoryService)
 def get_categories_by_user(userid: int, category_svc: CategoryService):
-    categories = category_svc.get_categories(userid)
+    categories = category_svc.get_categories_by_user(userid)
     return jsonify(categories)
 
 
