@@ -39,9 +39,24 @@ class UserService(DataService):
         if patch.password and user.password != self.hash_password(patch.password):
             user.password = self.hash_password(patch.password)
 
+        if patch.role and user.role != patch.role:
+            user.role = patch.role
+
         self.session.commit()
         schema: UserSchemaType = UserSchema()
         return schema.dump(user).data
+
+    def login(self, data: Dict[str, Any]) -> User:
+        username = data["username"]
+        user: User = self.session \
+            .query(User) \
+            .filter_by(username=username) \
+            .first()
+
+        if user.password != self.hash_password(data["password"]):
+            raise Exception("Invalid username or password!")
+
+        return user
 
     @staticmethod
     def hash_password(password: str) -> str:
