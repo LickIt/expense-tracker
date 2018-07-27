@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, Response
 from functools import wraps
 from ..services import AuthService, UserService, dbservices
-from ..entities import User, UserSchema
+from ..entities import UserSchema, UserSchemaType
 
 auth_api = Blueprint("auth", "auth", url_prefix="/api/auth")
 auth_svc = AuthService()
@@ -11,19 +11,16 @@ def authorize(role: str = None):
     def decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-
-            print("AUTH")
             auth = request.headers.get("Authorization", None)
             if not auth or not auth.startswith("Bearer "):
-                return Response("Invalid or missing Authorization header!", status=403)
+                return Response("Invalid or missing Authorization header!", status=401)
 
             auth = auth.split(" ")[1]
             claims = auth_svc.validate_token(auth)
-            print(claims)
 
             # check role match except for admins
             if role and claims.role != "admin" and claims.role != role:
-                return Response(status=403)
+                return Response(status=401)
 
             # check if user has permission to view resource
             # except for admins
@@ -37,7 +34,7 @@ def authorize(role: str = None):
                     userid = data.get("userid")
 
                 if userid and userid != claims.userid:
-                    return Response(status=403)
+                    return Response(status=401)
 
             return f(*args, **kwargs)
 
@@ -50,4 +47,10 @@ def authorize(role: str = None):
 def post_login(user_svc: UserService):
     data = UserSchema(exclude=("id", "role")).load(request.get_json()).data
     user = user_svc.login(data)
-    return jsonify({"token": auth_svc.generate_token(user)})
+    token = auth_svc.generate_token(user)
+
+    schema: UserSchemaType = UserSchema()
+    response = schema.dump(user).data
+    response["token"] = token
+
+    return jsonify(response)

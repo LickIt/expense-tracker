@@ -4,6 +4,7 @@ from hashlib import sha256
 from base64 import b64encode
 from ..entities import User, UserSchema, UserSchemaType
 from .data_service import DataService
+from ..common import ApiException
 
 
 class UserService(DataService):
@@ -48,13 +49,18 @@ class UserService(DataService):
 
     def login(self, data: Dict[str, Any]) -> User:
         username = data["username"]
+        password = data["password"]
+
+        if not password or not username:
+            raise ApiException("No username or password!")
+
         user: User = self.session \
             .query(User) \
             .filter_by(username=username) \
             .first()
 
-        if user.password != self.hash_password(data["password"]):
-            raise Exception("Invalid username or password!")
+        if not user or user.password != self.hash_password(password):
+            raise ApiException("Invalid username or password!")
 
         return user
 
