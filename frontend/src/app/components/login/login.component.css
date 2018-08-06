@@ -1,0 +1,19 @@
+:host {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.mat-card-actions {
+    padding-left: 0.5rem;
+    padding-bottom: 0.5rem !important;
+}
+
+.form {
+    max-width: 70%;
+}

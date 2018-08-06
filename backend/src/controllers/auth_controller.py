@@ -20,7 +20,7 @@ def authorize(role: str = None):
 
             # check role match except for admins
             if role and claims.role != "admin" and claims.role != role:
-                return Response(status=401)
+                return Response(status=403)
 
             # check if user has permission to view resource
             # except for admins
@@ -34,7 +34,7 @@ def authorize(role: str = None):
                     userid = data.get("userid")
 
                 if userid and userid != claims.userid:
-                    return Response(status=401)
+                    return Response(status=403)
 
             return f(*args, **kwargs)
 

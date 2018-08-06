@@ -1,28 +1,32 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { API_URL } from '../env';
+import { Router } from '@angular/router';
 
 
 @Injectable()
 export class AuthService {
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private router: Router) { }
 
     login(username: string, password: string) {
         return this.http.post<any>(`${API_URL}/auth/login`, { username: username, password: password })
-            .pipe(map(user => {
+            .pipe(tap(user => {
                 // login successful if there's a jwt token in the response
                 if (user && user.token) {
-                    // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    localStorage.setItem('jwt-token', user.token);
                 }
-
-                return user;
             }));
     }
 
-    logout() {
-        // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
+    logout(redirect: boolean = false) {
+        localStorage.removeItem('jwt-token');
+        if (redirect) {
+            this.router.navigate(['/login']);
+        }
+    }
+
+    getToken() {
+        return localStorage.getItem('jwt-token');
     }
 }

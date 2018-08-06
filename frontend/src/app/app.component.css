@@ -1,0 +1,9 @@
+.mat-button .mat-icon {
+    padding-right: 0.25rem;
+}
+
+.main-container {
+    height: calc(100vh - 5rem);
+    margin-top: 1rem;
+    overflow-y: hidden;
+}

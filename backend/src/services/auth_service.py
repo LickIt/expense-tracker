@@ -4,6 +4,7 @@ import jwt
 from datetime import datetime, timedelta
 from collections import namedtuple
 from ..entities import User
+from ..common import ApiException
 
 
 class AuthService(object):
@@ -38,7 +39,7 @@ class AuthService(object):
             payload.expires, AuthService.__DATETIME_FORMAT__)
 
         if datetime.utcnow() > expires:
-            raise Exception("Expired token!")
+            raise ApiException("Expired token!", 401)
 
         return payload
 
