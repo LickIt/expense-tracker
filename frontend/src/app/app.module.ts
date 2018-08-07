@@ -9,8 +9,10 @@ import { AuthGuard } from './common/auth.guard';
 import { JwtInterceptor } from './common/jwt.interceptor';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { UserInfoComponent } from './components/user-info/user-info.component';
 import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
+import { LayoutModule } from '@angular/cdk/layout';
 import {
   MatToolbarModule,
   MatButtonModule,
@@ -18,8 +20,10 @@ import {
   MatCardModule,
   MatFormFieldModule,
   MatInputModule,
-  MatListModule
+  MatListModule,
+  MatMenuModule
 } from '@angular/material';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 
 @NgModule({
@@ -31,18 +35,22 @@ import {
     HttpClientModule,
     ROUTING,
     // material components
+    LayoutModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatListModule
+    MatListModule,
+    MatMenuModule
   ],
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    UserInfoComponent,
+    ToolbarComponent
   ],
   providers: [
     AuthGuard,

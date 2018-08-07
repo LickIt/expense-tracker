@@ -54,3 +54,15 @@ def post_login(user_svc: UserService):
     response["token"] = token
 
     return jsonify(response)
+
+
+@auth_api.route("/loggedin", methods=["GET"])
+@dbservices(user_svc=UserService)
+@authorize()
+def get_loggedin_user(user_svc: UserService):
+    auth = request.headers.get("Authorization", None)
+    auth = auth.split(" ")[1]
+    claims = auth_svc.validate_token(auth)
+    user = user_svc.get_user(claims.userid)
+
+    return jsonify(user)

@@ -1,0 +1,20 @@
+<mat-toolbar [color]="'primary'" class="toolbar">
+    <a routerLink="/" mat-button>
+        <mat-icon>home</mat-icon>
+        <span *ngIf="isBigScreen">Home</span>
+    </a>
+    <a routerLink="/expense/add" mat-button>
+        <mat-icon>add</mat-icon>
+        <span *ngIf="isBigScreen">Add</span>
+    </a>
+    <a routerLink="/expense" mat-button>
+        <mat-icon>attach_money</mat-icon>
+        <span *ngIf="isBigScreen">List</span>
+    </a>
+    <a routerLink="/chart" mat-button>
+        <mat-icon>show_chart</mat-icon>
+        <span *ngIf="isBigScreen">Chart</span>
+    </a>
+    <span class="toolbar-spacer"></span>
+    <app-user-info></app-user-info>
+</mat-toolbar>

@@ -1,9 +1,10 @@
-.mat-button .mat-icon {
-    padding-right: 0.25rem;
+.main-container {
+    height: calc(100vh - 6rem);
+    margin: 1rem;
 }
 
-.main-container {
-    height: calc(100vh - 5rem);
-    margin-top: 1rem;
-    overflow-y: hidden;
+@media (max-width: 599px) {
+    .main-container {
+        height: calc(100vh - 5.5rem);
+    }
 }

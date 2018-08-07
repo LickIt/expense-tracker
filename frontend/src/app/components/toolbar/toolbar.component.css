@@ -1,0 +1,11 @@
+.toolbar .mat-button {
+    min-width: 0;
+}
+
+.mat-button .mat-icon {
+    padding-right: 0.25rem;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}

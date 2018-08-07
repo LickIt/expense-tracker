@@ -8,6 +8,15 @@ from ..common import ApiException
 
 
 class UserService(DataService):
+    def get_user(self, userid: int) -> Dict[str, Any]:
+        user: User = self.session \
+            .query(User) \
+            .filter_by(id=userid) \
+            .first()
+
+        schema: UserSchemaType = UserSchema()
+        return schema.dump(user).data
+
     def get_users(self) -> Dict[str, Any]:
         users = self.session \
             .query(User) \
