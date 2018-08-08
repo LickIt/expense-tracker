@@ -21,9 +21,15 @@ import {
   MatFormFieldModule,
   MatInputModule,
   MatListModule,
-  MatMenuModule
+  MatMenuModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatSelectModule
 } from '@angular/material';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { ExpenseAddComponent } from './components/expense/add/expense.add.component';
+import { ExpenseService } from './services/expense.service';
+import { CategoryService } from './services/category.service';
 
 
 @NgModule({
@@ -43,14 +49,18 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule
   ],
   declarations: [
     AppComponent,
     LoginComponent,
     HomeComponent,
     UserInfoComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    ExpenseAddComponent
   ],
   providers: [
     AuthGuard,
@@ -60,7 +70,9 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
       useClass: JwtInterceptor,
       multi: true
     },
-    UserService
+    UserService,
+    ExpenseService,
+    CategoryService
   ],
   bootstrap: [AppComponent]
 })

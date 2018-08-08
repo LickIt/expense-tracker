@@ -7,7 +7,7 @@ category_api = Blueprint("categories", "categories",
                          url_prefix="/api/categories")
 
 
-@category_api.route("/<int:userid>")
+@category_api.route("/user/<int:userid>")
 @dbservices(category_svc=CategoryService)
 @authorize()
 def get_categories_by_user(userid: int, category_svc: CategoryService):

@@ -1,0 +1,22 @@
+<form class="form" [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <input matInput type="number" placeholder="Amount" formControlName="amount" required>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput [matDatepicker]="picker" placeholder="Timestamp" formControlName="timestamp" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-select placeholder="Category" formControlName="categoryid" required>
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+                {{ category.name }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <textarea matInput placeholder="Notes" formControlName="notes"></textarea>
+    </mat-form-field>
+    <button type="submit" mat-flat-button [color]="'accent'" [disabled]="!expenseForm.valid || saving">Submit</button>
+    <mat-error>{{ error }}</mat-error>
+</form>
