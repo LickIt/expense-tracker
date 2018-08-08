@@ -16,7 +16,7 @@ class ExpenseService(DataService):
         expenses = self.session \
             .query(Expense) \
             .filter(*filters) \
-            .order_by(Expense.id) \
+            .order_by(Expense.id.desc()) \
             .all()
 
         schema: ExpenseSchemaType = ExpenseSchema(many=True)

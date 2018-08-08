@@ -1,0 +1,47 @@
+<div class="toolbar">
+    <mat-form-field class="filter">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+    <button mat-icon-button (click)="load()" class="refresh-button">
+        <mat-icon>refresh</mat-icon>
+    </button>
+</div>
+
+
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width">
+
+    <!-- Timestamp Column -->
+    <ng-container matColumnDef="timestamp">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Timestamp </th>
+        <td mat-cell *matCellDef="let element"> {{ element.timestamp | date:dateFormat }} </td>
+        <td mat-footer-cell *matFooterCellDef> Total </td>
+    </ng-container>
+
+    <!-- Category Column -->
+    <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-center"> Category </th>
+        <td mat-cell *matCellDef="let element" align="center">
+            <span class="category-color" [style.background-color]="element.category.color || 'lightgray'"></span>
+            <span *ngIf="isBigScreen">{{ element.category.name }}</span>
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <!-- Notes Column -->
+    <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef> Notes </th>
+        <td mat-cell *matCellDef="let element"> {{ element.notes }} </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <!-- Amount Column -->
+    <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="align-right"> Amount </th>
+        <td mat-cell *matCellDef="let element" align="right"> {{ element.amount | number:'1.2-2' }} </td>
+        <td mat-footer-cell *matFooterCellDef align="right"> {{ getTotalAmount() | number:'1.2-2' }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+</table>

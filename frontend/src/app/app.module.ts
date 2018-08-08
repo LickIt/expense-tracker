@@ -24,12 +24,16 @@ import {
   MatMenuModule,
   MatDatepickerModule,
   MatNativeDateModule,
-  MatSelectModule
+  MatSelectModule,
+  MatTableModule,
+  MatSortModule
 } from '@angular/material';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ExpenseAddComponent } from './components/expense/add/expense.add.component';
 import { ExpenseService } from './services/expense.service';
 import { CategoryService } from './services/category.service';
+import { ExpenseListComponent } from './components/expense/list/expense.list.component';
+import { DatePipe } from '@angular/common';
 
 
 @NgModule({
@@ -52,7 +56,9 @@ import { CategoryService } from './services/category.service';
     MatMenuModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTableModule,
+    MatSortModule
   ],
   declarations: [
     AppComponent,
@@ -60,7 +66,8 @@ import { CategoryService } from './services/category.service';
     HomeComponent,
     UserInfoComponent,
     ToolbarComponent,
-    ExpenseAddComponent
+    ExpenseAddComponent,
+    ExpenseListComponent
   ],
   providers: [
     AuthGuard,
@@ -72,7 +79,8 @@ import { CategoryService } from './services/category.service';
     },
     UserService,
     ExpenseService,
-    CategoryService
+    CategoryService,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

@@ -12,12 +12,12 @@ export class ExpenseService {
     }
 
     public getExpenses(userid: number, from?: Date, to?: Date): Observable<Expense[]> {
-        const params = new HttpParams();
+        let params = new HttpParams();
         if (from) {
-            params.set('from', this.dateToUnixTimestamp(from).toString());
+            params = params.set('from', this.dateToUnixTimestamp(from).toString());
         }
         if (to) {
-            params.set('from', this.dateToUnixTimestamp(to).toString());
+            params = params.set('to', this.dateToUnixTimestamp(to).toString());
         }
 
         return this.http.get<Expense[]>(`${API_URL}/expenses/user/${userid}`, { params });
