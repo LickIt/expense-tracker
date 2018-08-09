@@ -1,9 +1,5 @@
-:host > form {
+:host>form {
     display: flex;
     flex-flow: column;
     max-width: var(--form-max-width);
-}
-
-.manage-categories {
-    padding: 0;
 }

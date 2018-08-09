@@ -2,6 +2,12 @@
 
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
+:root {
+    --border-color: rgba(0, 0, 0, .12);
+    --form-max-width: 440px;
+    --label-color: rgba(0,0,0,.54);
+}
+
 body {
     width: 100%;
     padding: 0;
@@ -11,4 +17,17 @@ body {
 
 .full-width {
     width: 100%;
+}
+
+.category-color {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 1rem;
+    margin: 0 0.5rem 0 0.5rem;
+    vertical-align: middle;
+}
+
+.valign-middle {
+    vertical-align: middle;
 }

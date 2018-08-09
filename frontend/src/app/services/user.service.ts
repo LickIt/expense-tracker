@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_URL } from '../env';
+import { environment } from '../../environments/environment';
 import { User } from '../models/user.model';
 
 
@@ -12,6 +12,6 @@ export class UserService {
 
     public getUsers(): Observable<User[]> {
         return this.http
-            .get<User[]>(`${API_URL}/users`);
+            .get<User[]>(`${environment.apiUrl}/users`);
     }
 }

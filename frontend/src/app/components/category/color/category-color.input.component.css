@@ -1,0 +1,12 @@
+.color-tile {
+    width: 100%;
+    height: 100%;
+}
+
+.spacer {
+    margin-top: 1.5rem;
+}
+
+.color-value {
+    padding-bottom: 0.25rem;
+}

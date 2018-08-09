@@ -1,6 +1,6 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule, forwardRef } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
@@ -26,7 +26,9 @@ import {
   MatNativeDateModule,
   MatSelectModule,
   MatTableModule,
-  MatSortModule
+  MatSortModule,
+  MatGridListModule,
+  MatFormFieldControl
 } from '@angular/material';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ExpenseAddComponent } from './components/expense/add/expense.add.component';
@@ -34,6 +36,9 @@ import { ExpenseService } from './services/expense.service';
 import { CategoryService } from './services/category.service';
 import { ExpenseListComponent } from './components/expense/list/expense.list.component';
 import { DatePipe } from '@angular/common';
+import { CategoryListComponent } from './components/category/list/category.list.component';
+import { CategoryEditComponent } from './components/category/edit/category.edit.component';
+import { CategoryColorInputComponent } from './components/category/color/category-color.input.component';
 
 
 @NgModule({
@@ -58,7 +63,8 @@ import { DatePipe } from '@angular/common';
     MatNativeDateModule,
     MatSelectModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatGridListModule
   ],
   declarations: [
     AppComponent,
@@ -67,7 +73,10 @@ import { DatePipe } from '@angular/common';
     UserInfoComponent,
     ToolbarComponent,
     ExpenseAddComponent,
-    ExpenseListComponent
+    ExpenseListComponent,
+    CategoryListComponent,
+    CategoryEditComponent,
+    CategoryColorInputComponent
   ],
   providers: [
     AuthGuard,
@@ -80,7 +89,11 @@ import { DatePipe } from '@angular/common';
     UserService,
     ExpenseService,
     CategoryService,
-    DatePipe
+    DatePipe,
+    {
+      provide: MatFormFieldControl,
+      useExisting: CategoryColorInputComponent
+    }
   ],
   bootstrap: [AppComponent]
 })

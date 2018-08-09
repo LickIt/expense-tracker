@@ -25,7 +25,7 @@ class Category(Entity, Base):
 class CategorySchema(EntitySchema):
     name = fields.String()
     color = fields.String()
-    userid = fields.Integer()
+    userid = fields.Integer(dump_only=True, load_only=True)
 
 
 CategorySchemaType = Union[BaseSchema, CategorySchema]

@@ -7,6 +7,10 @@
             <mat-icon>person</mat-icon>
             <span>{{ user.username}}</span>
         </span>
+        <a routerLink="/category" mat-menu-item>
+            <mat-icon>label</mat-icon>
+            <span>Categories</span>
+        </a>
         <button mat-menu-item (click)="logout()">
             <mat-icon>exit_to_app</mat-icon>
             <span>Logout</span>

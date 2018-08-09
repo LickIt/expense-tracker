@@ -1,0 +1,10 @@
+<form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <input matInput placeholder="Name" formControlName="name" required>
+    </mat-form-field>
+    <mat-form-field>
+        <app-category-color-input placeholder="Color" formControlName="color" required></app-category-color-input>
+    </mat-form-field>
+    <button type="submit" mat-flat-button [color]="'accent'" [disabled]="!form.valid || saving">Submit</button>
+    <mat-error>{{ error }}</mat-error>
+</form>

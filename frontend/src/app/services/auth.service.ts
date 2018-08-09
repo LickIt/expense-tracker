@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
-import { API_URL } from '../env';
+import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { throwError, Subject, Observable, of } from 'rxjs';
@@ -16,7 +16,7 @@ export class AuthService {
     constructor(private http: HttpClient, private router: Router) { }
 
     public login(username: string, password: string): Observable<any> {
-        return this.http.post<any>(`${API_URL}/auth/login`, { username: username, password: password })
+        return this.http.post<any>(`${environment.apiUrl}/auth/login`, { username: username, password: password })
             .pipe(tap(user => {
                 // login successful if there's a jwt token in the response
                 if (user && user.token) {
@@ -33,7 +33,7 @@ export class AuthService {
         this.logoutEvent.next();
 
         if (redirect) {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
         }
     }
 
@@ -48,7 +48,7 @@ export class AuthService {
 
         const token = this.getToken();
         if (token) {
-            return this.http.get<User>(`${API_URL}/auth/loggedin`)
+            return this.http.get<User>(`${environment.apiUrl}/auth/loggedin`)
                 .pipe(tap(user => this.loggedInUser = user));
         }
 

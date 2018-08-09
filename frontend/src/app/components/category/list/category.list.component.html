@@ -1,0 +1,19 @@
+<mat-list class="mat-elevation-z8">
+    <mat-list-item *ngFor="let category of categories; last as last">
+        <span matLine>
+            <span class="category-color" [style.background-color]="category.color || 'lightgray'"></span>
+            <span class="valign-middle">{{ category.name }}</span>
+        </span>
+        <a [routerLink]="['/category/edit', category.id]" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+        </a>
+        <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item class="new-button">
+        <a [routerLink]="['/category/edit']" mat-menu-item class="full-width">
+            <mat-icon>add</mat-icon>
+            <span>New</span>
+        </a>
+    </mat-list-item>
+</mat-list>

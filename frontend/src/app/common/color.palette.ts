@@ -1,4 +1,4 @@
-export const colors = new Map<string, string>([
+export const colorPalette = new Map<string, string>([
     ['turquoise', '#1abc9c'],
     ['emerald', '#2ecc71'],
     ['peterriver', '#3498db'],
