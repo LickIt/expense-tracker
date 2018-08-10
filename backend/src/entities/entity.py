@@ -4,13 +4,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from marshmallow import fields
 from marshmallow.schema import Schema
 
-db_url = "localhost:5432"
-db_name = "expense-tracker"
-db_user = "postgres"
-db_password = "postgres"
-
-engine = create_engine(
-    f"postgresql://{db_user}:{db_password}@{db_url}/{db_name}")
+engine = create_engine("sqlite:///expense-tracker.db")
 SessionFactory = sessionmaker(bind=engine)
 Base = declarative_base()
 
