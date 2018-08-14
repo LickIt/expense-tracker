@@ -8,3 +8,11 @@ export class Expense {
         public notes?: string,
     ) { }
 }
+
+export class ExpenseCategoryReport {
+    constructor(
+        public categoryid: number,
+        public amount: number,
+        public count: number
+    ) { }
+}

@@ -53,8 +53,7 @@ export class ExpenseAddComponent implements OnInit {
             .pipe(
                 first(),
                 flatMap(user => {
-                    expense.userid = user.id;
-                    return this.expenseService.createExpense(expense);
+                    return this.expenseService.createExpense(user.id, expense);
                 }),
                 first()
             )

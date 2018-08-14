@@ -29,9 +29,16 @@ class Expense(Entity, Base):
 class ExpenseSchema(EntitySchema):
     amount = fields.Float()
     timestamp = fields.DateTime()
-    userid = fields.Integer()
+    userid = fields.Integer(dump_only=True, load_only=True)
     categoryid = fields.Integer()
     notes = fields.String()
 
 
+class ExpenseCategoryReportSchema(Schema):
+    categoryid = fields.Integer()
+    amount = fields.Float()
+    count = fields.Integer()
+
+
 ExpenseSchemaType = Union[BaseSchema, ExpenseSchema]
+ExpenseCategoryReportSchemaType = Union[BaseSchema, ExpenseCategoryReportSchema]

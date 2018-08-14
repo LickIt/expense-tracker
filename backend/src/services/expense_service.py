@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from typing import Dict, Any
 from datetime import datetime
-from ..entities import Expense, ExpenseSchema, ExpenseSchemaType
+from ..entities import Expense, ExpenseSchema, ExpenseSchemaType, ExpenseCategoryReportSchema, ExpenseCategoryReportSchemaType
 from .data_service import DataService
 
 
@@ -33,3 +34,18 @@ class ExpenseService(DataService):
 
         schema: ExpenseSchemaType = ExpenseSchema()
         return schema.dump(expense).data
+
+    def get_expense_report_by_category(self, userid: int) -> Dict[str, Any]:
+        expenses = self.session \
+            .query(
+                Expense.categoryid,
+                func.sum(Expense.amount).label("amount"),
+                func.count(Expense.id).label("count")
+            ) \
+            .filter_by(userid=userid) \
+            .group_by(Expense.categoryid) \
+            .all()
+
+        schema: ExpenseCategoryReportSchemaType = ExpenseCategoryReportSchema(
+            many=True)
+        return schema.dump(expenses).data

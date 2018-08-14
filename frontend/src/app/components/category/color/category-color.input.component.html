@@ -1,7 +1,7 @@
 <div>
     <div *ngIf="shouldLabelFloat; else spacer" class="color-value">{{ value }}</div>
     <ng-template #spacer><div class="spacer"></div></ng-template>
-    <mat-grid-list cols="5" rowHeight="5rem">
+    <mat-grid-list cols="5" rowHeight="1:1">
         <mat-grid-tile *ngFor="let color of colors">
             <button type="button" mat-flat-button [style.background-color]="color[1]" class="color-tile" (click)="updateColor(color[1])">
                 <ng-container *ngIf="value === color[1]">

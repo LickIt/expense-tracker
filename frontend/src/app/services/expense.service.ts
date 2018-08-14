@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Expense } from '../models/expense.model';
+import { Expense, ExpenseCategoryReport } from '../models/expense.model';
 import { AuthService } from './auth.service';
 
 
@@ -20,11 +20,15 @@ export class ExpenseService {
             params = params.set('to', this.dateToUnixTimestamp(to).toString());
         }
 
-        return this.http.get<Expense[]>(`${environment.apiUrl}/expenses/user/${userid}`, { params });
+        return this.http.get<Expense[]>(`${environment.apiUrl}/user/${userid}/expenses`, { params });
     }
 
-    public createExpense(expense: Expense): Observable<Expense> {
-        return this.http.post<Expense>(`${environment.apiUrl}/expenses`, expense);
+    public createExpense(userid: number, expense: Expense): Observable<Expense> {
+        return this.http.post<Expense>(`${environment.apiUrl}/user/${userid}/expenses`, expense);
+    }
+
+    public getExpenseByCategoryReport(userid: number): Observable<ExpenseCategoryReport[]> {
+        return this.http.get<ExpenseCategoryReport[]>(`${environment.apiUrl}/user/${userid}/expenses/category-report`);
     }
 
     private dateToUnixTimestamp(date: Date): number {
