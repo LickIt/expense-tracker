@@ -6,6 +6,7 @@ import { ExpenseAddComponent } from './components/expense/add/expense.add.compon
 import { ExpenseListComponent } from './components/expense/list/expense.list.component';
 import { CategoryListComponent } from './components/category/list/category.list.component';
 import { CategoryEditComponent } from './components/category/edit/category.edit.component';
+import { ChartsComponent } from './components/charts/charts.component';
 
 const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
@@ -15,6 +16,7 @@ const appRoutes: Routes = [
     { path: 'category/edit/:id', component: CategoryEditComponent, canActivate: [AuthGuard] },
     { path: 'category/edit', component: CategoryEditComponent, canActivate: [AuthGuard] },
     { path: 'category', component: CategoryListComponent, canActivate: [AuthGuard] },
+    { path: 'charts', component: ChartsComponent, canActivate: [AuthGuard] },
 
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

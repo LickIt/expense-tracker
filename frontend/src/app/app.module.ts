@@ -39,6 +39,7 @@ import { DatePipe } from '@angular/common';
 import { CategoryListComponent } from './components/category/list/category.list.component';
 import { CategoryEditComponent } from './components/category/edit/category.edit.component';
 import { CategoryColorInputComponent } from './components/category/color/category-color.input.component';
+import { ChartsComponent } from './components/charts/charts.component';
 
 
 @NgModule({
@@ -76,7 +77,8 @@ import { CategoryColorInputComponent } from './components/category/color/categor
     ExpenseListComponent,
     CategoryListComponent,
     CategoryEditComponent,
-    CategoryColorInputComponent
+    CategoryColorInputComponent,
+    ChartsComponent
   ],
   providers: [
     AuthGuard,
