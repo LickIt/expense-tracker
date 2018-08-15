@@ -27,8 +27,16 @@ export class ExpenseService {
         return this.http.post<Expense>(`${environment.apiUrl}/user/${userid}/expenses`, expense);
     }
 
-    public getExpenseByCategoryReport(userid: number): Observable<ExpenseCategoryReport[]> {
-        return this.http.get<ExpenseCategoryReport[]>(`${environment.apiUrl}/user/${userid}/expenses/category-report`);
+    public getExpenseByCategoryReport(userid: number, from?: Date, to?: Date): Observable<ExpenseCategoryReport[]> {
+        let params = new HttpParams();
+        if (from) {
+            params = params.set('from', this.dateToUnixTimestamp(from).toString());
+        }
+        if (to) {
+            params = params.set('to', this.dateToUnixTimestamp(to).toString());
+        }
+
+        return this.http.get<ExpenseCategoryReport[]>(`${environment.apiUrl}/user/${userid}/expenses/category-report`, { params });
     }
 
     private dateToUnixTimestamp(date: Date): number {

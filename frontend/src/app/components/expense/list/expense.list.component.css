@@ -20,15 +20,11 @@ th.mat-header-cell.align-center ::ng-deep .mat-sort-header-container {
     justify-content: center;
 }
 
-.refresh-button {
-    color: rgba(0, 0, 0, 0.7);
-}
-
 .toolbar {
-    display: flex;
-    align-items: baseline;
+    margin-bottom: 1rem;
 }
 
-.toolbar .filter {
-    flex: 1;
+.toolbar .mat-form-field {
+    display: block;
+    max-width: var(--form-max-width);
 }

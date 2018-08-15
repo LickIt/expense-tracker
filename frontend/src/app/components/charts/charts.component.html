@@ -1,3 +1,21 @@
+<mat-expansion-panel class="toolbar">
+    <mat-expansion-panel-header>
+        Filters
+    </mat-expansion-panel-header>
+
+    <mat-form-field class="full-width">
+        <input id="fromDate" matInput [matDatepicker]="fromDatePicker" placeholder="From date" [(ngModel)]="fromDate" (dateChange)="load()">
+        <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #fromDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+        <input id="toDate" matInput [matDatepicker]="toDatePicker" placeholder="To date" [(ngModel)]="toDate" (dateChange)="load()">
+        <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #toDatePicker></mat-datepicker>
+    </mat-form-field>
+</mat-expansion-panel>
+
 <div class="container">
     <canvas #chart></canvas>
 </div>

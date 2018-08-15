@@ -7,6 +7,7 @@ import { first, flatMap, map } from 'rxjs/operators';
 import { tap } from 'rxjs/internal/operators/tap';
 import { Category } from '../../models/category.model';
 import { ExpenseCategoryReport } from '../../models/expense.model';
+import { MatDatepickerInputEvent } from '@angular/material';
 
 @Component({
     selector: 'app-charts',
@@ -18,6 +19,8 @@ export class ChartsComponent implements OnInit {
     private chartElement: ElementRef;
     private reportData: ExpenseCategoryReport[];
     private chart: Chart;
+    public fromDate: Date;
+    public toDate: Date;
 
     constructor(
         private authService: AuthService,
@@ -29,6 +32,12 @@ export class ChartsComponent implements OnInit {
         Chart.defaults.global.defaultFontFamily = 'Roboto,"Helvetica Neue",sans-serif';
         Chart.defaults.global.defaultFontSize = 14;
         Chart.defaults.global.defaultFontColor = 'black';
+
+        // default range is start of month to now
+        const now = new Date();
+        this.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        this.toDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
         this.load();
     }
 
@@ -54,7 +63,7 @@ export class ChartsComponent implements OnInit {
                     }, new Map<number, Category>());
                 }),
                 // get expenses
-                flatMap(_ => this.expenseService.getExpenseByCategoryReport(userid)),
+                flatMap(_ => this.expenseService.getExpenseByCategoryReport(userid, this.fromDate, this.toDate)),
                 first(),
                 map(expenses => {
                     for (const expense of expenses) {
@@ -84,16 +93,29 @@ export class ChartsComponent implements OnInit {
         this.chart = new Chart(
             chartCtx,
             {
-                type: 'pie',
+                type: 'doughnut',
                 data: data,
                 options: {
                     responsive: true,
-                    cutoutPercentage: 0,
+                    cutoutPercentage: 40,
                     legend: {
                         position: 'left'
                     }
                 }
             }
         );
+
+        this.chart.data = data;
+        this.chart.render();
+    }
+
+    fromDateChanged(event: MatDatepickerInputEvent<Date>) {
+        this.fromDate = event.value;
+        this.load();
+    }
+
+    toDateChanged(event: MatDatepickerInputEvent<Date>) {
+        this.toDate = event.value;
+        this.load();
     }
 }

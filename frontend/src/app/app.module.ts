@@ -28,7 +28,8 @@ import {
   MatTableModule,
   MatSortModule,
   MatGridListModule,
-  MatFormFieldControl
+  MatFormFieldControl,
+  MatExpansionModule
 } from '@angular/material';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ExpenseAddComponent } from './components/expense/add/expense.add.component';
@@ -65,7 +66,8 @@ import { ChartsComponent } from './components/charts/charts.component';
     MatSelectModule,
     MatTableModule,
     MatSortModule,
-    MatGridListModule
+    MatGridListModule,
+    MatExpansionModule
   ],
   declarations: [
     AppComponent,

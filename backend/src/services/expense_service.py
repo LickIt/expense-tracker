@@ -35,14 +35,20 @@ class ExpenseService(DataService):
         schema: ExpenseSchemaType = ExpenseSchema()
         return schema.dump(expense).data
 
-    def get_expense_report_by_category(self, userid: int) -> Dict[str, Any]:
+    def get_expense_report_by_category(self, userid: int, _from: datetime = None, _to: datetime = None) -> Dict[str, Any]:
+        filters = [Expense.userid == userid]
+        if _from:
+            filters.append(Expense.timestamp >= _from)
+        if _to:
+            filters.append(Expense.timestamp <= _to)
+
         expenses = self.session \
             .query(
                 Expense.categoryid,
                 func.sum(Expense.amount).label("amount"),
                 func.count(Expense.id).label("count")
             ) \
-            .filter_by(userid=userid) \
+            .filter(*filters) \
             .group_by(Expense.categoryid) \
             .all()
 

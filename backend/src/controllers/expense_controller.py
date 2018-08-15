@@ -38,5 +38,7 @@ def post_expense(userid: int, expense_svc: ExpenseService):
 @dbservices(expense_svc=ExpenseService)
 @authorize()
 def get_expense_report_by_category(userid: int, expense_svc: ExpenseService):
-    data = expense_svc.get_expense_report_by_category(userid)
+    _from = query_to_datetime(request.args.get("from"))
+    _to = query_to_datetime(request.args.get("to"))
+    data = expense_svc.get_expense_report_by_category(userid, _from, _to)
     return jsonify(data)
