@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Expense, ExpenseCategoryReport } from '../models/expense.model';
+import { Expense, ExpenseCategoryReport, ExpenseDailyReport, ExpenseMonthlyReport } from '../models/expense.model';
 import { AuthService } from './auth.service';
 
 
@@ -37,6 +37,14 @@ export class ExpenseService {
         }
 
         return this.http.get<ExpenseCategoryReport[]>(`${environment.apiUrl}/user/${userid}/expenses/category-report`, { params });
+    }
+
+    public getDailyExpenseReport(userid: number) {
+        return this.http.get<ExpenseDailyReport>(`${environment.apiUrl}/user/${userid}/expenses/daily-report`);
+    }
+
+    public getMonthlyExpenseReport(userid: number) {
+        return this.http.get<ExpenseMonthlyReport>(`${environment.apiUrl}/user/${userid}/expenses/monthly-report`);
     }
 
     private dateToUnixTimestamp(date: Date): number {

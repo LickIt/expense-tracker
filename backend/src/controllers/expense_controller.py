@@ -42,3 +42,19 @@ def get_expense_report_by_category(userid: int, expense_svc: ExpenseService):
     _to = query_to_datetime(request.args.get("to"))
     data = expense_svc.get_expense_report_by_category(userid, _from, _to)
     return jsonify(data)
+
+
+@expense_api.route("/daily-report")
+@dbservices(expense_svc=ExpenseService)
+@authorize()
+def get_daily_expense_report(userid: int, expense_svc: ExpenseService):
+    data = expense_svc.get_daily_expense_report(userid)
+    return jsonify(data)
+
+
+@expense_api.route("/monthly-report")
+@dbservices(expense_svc=ExpenseService)
+@authorize()
+def get_monthly_expense_report(userid: int, expense_svc: ExpenseService):
+    data = expense_svc.get_monthly_expense_report(userid)
+    return jsonify(data)

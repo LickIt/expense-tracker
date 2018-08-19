@@ -1,3 +1,57 @@
-<div>
-    <h1 class="mat-h1">Home</h1>
+<div class="flex">
+    <mat-card>
+        <mat-card-title>Daily</mat-card-title>
+        <mat-card-content>
+            <mat-list>
+                <!-- <mat-divider></mat-divider> -->
+                <div class="flex">
+                    <mat-list-item class="half-width">
+                        <h4 mat-line> Mean </h4>
+                        <p mat-line> {{ dailyReportData?.mean | number:'1.2-2' }} </p>
+                    </mat-list-item>
+                    <mat-list-item class="half-width">
+                        <h4 mat-line> Median </h4>
+                        <p mat-line> {{ dailyReportData?.median | number:'1.2-2' }} </p>
+                    </mat-list-item>
+                </div>
+                <!-- <mat-divider></mat-divider> -->
+                <h3 mat-subheader>Categories by Amount</h3>
+                <div class="flex category-list">
+                    <mat-list-item *ngFor="let cat of dailyReportData?.top3CatAmount">
+                        <span mat-list-icon class="category-color" [style.background-color]="categoryMap.get(cat.categoryid).color || 'lightgray'"></span>
+                        <h4 mat-line> {{ categoryMap.get(cat.categoryid).name }} </h4>
+                        <p mat-line> {{ cat.value | number:'1.2-2' }} </p>
+                    </mat-list-item>
+                </div>
+                <!-- <mat-divider></mat-divider> -->
+                <h3 mat-subheader>Categories by Count</h3>
+                <div class="flex category-list">
+                    <mat-list-item *ngFor="let cat of dailyReportData?.top3CatCount">
+                        <span mat-list-icon class="category-color" [style.background-color]="categoryMap.get(cat.categoryid).color || 'lightgray'"></span>
+                        <h4 mat-line> {{ categoryMap.get(cat.categoryid).name }} </h4>
+                        <p mat-line> {{ cat.value | number:'1.0' }} </p>
+                    </mat-list-item>
+                </div>
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+        <mat-card-title>Monthly</mat-card-title>
+        <mat-card-content>
+            <mat-list>
+                <mat-list-item>
+                    <h4 mat-line> This Month </h4>
+                    <p mat-line> {{ monthlyReportData?.thisMonthTotal | number:'1.2-2' }} </p>
+                </mat-list-item>
+                <!-- <mat-divider></mat-divider> -->
+                <h3 mat-subheader> Trend </h3>
+                <!-- <mat-list-item> -->
+                    <div class="monthly-chart-container">
+                        <canvas #monthlyChart></canvas>
+                    </div>
+                <!-- </mat-list-item> -->
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
 </div>
