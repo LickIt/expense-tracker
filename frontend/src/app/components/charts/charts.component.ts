@@ -43,18 +43,12 @@ export class ChartsComponent implements OnInit {
 
     load() {
         const toDate = new Date(this.toDate.getFullYear(), this.toDate.getMonth(), this.toDate.getDate() + 1);
-        let userid: number;
         let categoriesMap: Map<number, Category>;
+        const userid = this.authService.getLoggedInUserId();
 
-        // get user
-        this.authService.getLoggedInUser()
+        // get categories
+        this.categoryService.getCategories(userid)
             .pipe(
-                first(),
-                // get categories
-                flatMap(user => {
-                    userid = user.id;
-                    return this.categoryService.getCategories(userid);
-                }),
                 first(),
                 // add categories to map
                 tap(categories => {

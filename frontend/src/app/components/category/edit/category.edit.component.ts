@@ -5,6 +5,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { CategoryService } from '../../../services/category.service';
 import { colorPalette } from '../../../common/color.palette';
+import { Category } from '../../../models/category.model';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-category-edit',
@@ -13,6 +15,7 @@ import { colorPalette } from '../../../common/color.palette';
 })
 export class CategoryEditComponent implements OnInit {
     private id: number;
+    private userid: number;
     public isNew = true;
     public saving = false;
     public error: any;
@@ -32,6 +35,7 @@ export class CategoryEditComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.userid = this.authService.getLoggedInUserId();
         this.route.params.pipe(first()).subscribe(params => {
             if (params.id) {
                 this.id = parseInt(params.id, 10);
@@ -42,12 +46,8 @@ export class CategoryEditComponent implements OnInit {
     }
 
     load() {
-        this.authService.getLoggedInUser()
-            .pipe(
-                first(),
-                flatMap(user => this.categoryService.getCategory(user.id, this.id)),
-                first()
-            )
+        this.categoryService.getCategory(this.userid, this.id)
+            .pipe(first())
             .subscribe(
                 category => this.form.patchValue(category),
                 error => this.error = error
@@ -61,18 +61,14 @@ export class CategoryEditComponent implements OnInit {
             data.id = this.id;
         }
 
-        this.authService.getLoggedInUser()
-            .pipe(
-                first(),
-                flatMap(user => {
-                    if (this.isNew) {
-                        return this.categoryService.createCategory(user.id, data);
-                    } else {
-                        return this.categoryService.updateCategory(user.id, data);
-                    }
-                }),
-                first()
-            )
+        let save: Observable<Category>;
+        if (this.isNew) {
+            save = this.categoryService.createCategory(this.userid, data);
+        } else {
+            save = this.categoryService.updateCategory(this.userid, data);
+        }
+
+        save.pipe(first())
             .subscribe(
                 category => this.router.navigate(['/category']),
                 error => {

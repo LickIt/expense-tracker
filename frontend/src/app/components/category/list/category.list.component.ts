@@ -20,12 +20,9 @@ export class CategoryListComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.authService.getLoggedInUser()
-            .pipe(
-                first(),
-                flatMap(user => this.categoryService.getCategories(user.id)),
-                first()
-            )
+        const userid = this.authService.getLoggedInUserId();
+        this.categoryService.getCategories(userid)
+            .pipe(first())
             .subscribe(
                 categories => this.categories = categories,
                 error => this.error = error

@@ -17,6 +17,7 @@ export class ExpenseAddComponent implements OnInit {
     public categories: Category[];
     public saving = false;
     public error: any;
+    private userid: number;
 
     public expenseForm = this.fb.group({
         amount: [null, Validators.required],
@@ -34,12 +35,9 @@ export class ExpenseAddComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.authService.getLoggedInUser()
-            .pipe(
-                first(),
-                flatMap(user => this.categoryService.getCategories(user.id)),
-                first()
-            )
+        this.userid = this.authService.getLoggedInUserId();
+        this.categoryService.getCategories(this.userid)
+            .pipe(first())
             .subscribe(
                 categories => this.categories = categories,
                 error => this.error = error
@@ -49,14 +47,8 @@ export class ExpenseAddComponent implements OnInit {
     onSubmit() {
         this.saving = true;
         const expense: Expense = Object.assign(new Expense(), this.expenseForm.value);
-        this.authService.getLoggedInUser()
-            .pipe(
-                first(),
-                flatMap(user => {
-                    return this.expenseService.createExpense(user.id, expense);
-                }),
-                first()
-            )
+        this.expenseService.createExpense(this.userid, expense)
+            .pipe(first())
             .subscribe(
                 _expense => this.router.navigate(['/expense']),
                 error => {

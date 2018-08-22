@@ -40,30 +40,24 @@ export class HomeComponent implements OnInit {
         Chart.defaults.global.defaultFontSize = 14;
         Chart.defaults.global.defaultFontColor = 'rgba(0,0,0,.87)';
 
-        this.authService.getLoggedInUser()
-            .pipe(
-                first(),
-                exhaustMap(user =>
-                    forkJoin(
-                        this.expenseService.getDailyExpenseReport(user.id).pipe(first()),
-                        this.expenseService.getMonthlyExpenseReport(user.id).pipe(first()),
-                        this.categoryService.getCategories(user.id).pipe(first())
-                    )
-                )
-            )
-            .subscribe(
-                data => {
-                    this.dailyReportData = data[0];
-                    this.monthlyReportData = data[1];
-                    this.showMonthlyTrendChart();
-                    this.categoryMap = data[2].reduce((_map, cat) => {
-                        _map.set(cat.id, cat);
-                        return _map;
-                    }, new Map<number, Category>());
-                    this.showDailyCategoriesChart();
-                },
-                error => console.error(error)
-            );
+        const userid = this.authService.getLoggedInUserId();
+        forkJoin(
+            this.expenseService.getDailyExpenseReport(userid).pipe(first()),
+            this.expenseService.getMonthlyExpenseReport(userid).pipe(first()),
+            this.categoryService.getCategories(userid).pipe(first())
+        ).subscribe(
+            data => {
+                this.dailyReportData = data[0];
+                this.monthlyReportData = data[1];
+                this.showMonthlyTrendChart();
+                this.categoryMap = data[2].reduce((_map, cat) => {
+                    _map.set(cat.id, cat);
+                    return _map;
+                }, new Map<number, Category>());
+                this.showDailyCategoriesChart();
+            },
+            error => console.error(error)
+        );
     }
 
     showDailyCategoriesChart() {
