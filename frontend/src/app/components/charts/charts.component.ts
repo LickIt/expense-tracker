@@ -42,6 +42,7 @@ export class ChartsComponent implements OnInit {
     }
 
     load() {
+        const toDate = new Date(this.toDate.getFullYear(), this.toDate.getMonth(), this.toDate.getDate() + 1);
         let userid: number;
         let categoriesMap: Map<number, Category>;
 
@@ -63,7 +64,7 @@ export class ChartsComponent implements OnInit {
                     }, new Map<number, Category>());
                 }),
                 // get expenses
-                flatMap(_ => this.expenseService.getExpenseByCategoryReport(userid, this.fromDate, this.toDate)),
+                flatMap(_ => this.expenseService.getExpenseByCategoryReport(userid, this.fromDate, toDate)),
                 first(),
                 map(expenses => {
                     for (const expense of expenses) {
@@ -107,15 +108,5 @@ export class ChartsComponent implements OnInit {
 
         this.chart.data = data;
         this.chart.render();
-    }
-
-    fromDateChanged(event: MatDatepickerInputEvent<Date>) {
-        this.fromDate = event.value;
-        this.load();
-    }
-
-    toDateChanged(event: MatDatepickerInputEvent<Date>) {
-        this.toDate = event.value;
-        this.load();
     }
 }
