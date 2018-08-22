@@ -32,8 +32,12 @@ class AuthService(object):
         return token.decode()
 
     def validate_token(self, token: str) -> "AuthService.JwtPayload":
-        data = jwt.decode(token, self.secret,
-                          algorithms=AuthService.__ALGORITHM__)
+        try:
+            data = jwt.decode(token, self.secret,
+                              algorithms=AuthService.__ALGORITHM__)
+        except:
+            raise ApiException("Invalid Token!", 401)
+
         payload = AuthService.JwtPayload(**data)
         expires = datetime.strptime(
             payload.expires, AuthService.__DATETIME_FORMAT__)
