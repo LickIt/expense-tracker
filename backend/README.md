@@ -2,16 +2,39 @@
 
 API for managing expenses written in python. Uses `flask` for REST queries and `sqlalchemy` for ORM.
 
-## Running
+## Development
 
-Install `pipenv` and create an environment with `pipenv install`.
-
-Start postgres database. Example in docker container:
+* Install `pipenv` and create an environment with:
+```bash
+PIPENV_VENV_IN_PROJECT=true pipenv install
 ```
-docker run --name expense-tracker-db \
-    -p 5432:5432 \
-    -e POSTGRES_DB=expense-tracker \
-    -d postgres
+_You may need the `python3.6-dev` package installed for the `uwsgi` server._
+
+* Run the flask application with
+```bash
+./run.sh
 ```
 
-Run the flask application with `./run.sh`.
+## Production
+
+To run in production behind nginx:
+* Start uwsgi (preferably as a service)
+
+```bash
+pipenv run uwsgi --ini util/uwsgi.ini --uid www-data --gid www-data --daemonize /var/log/uwsgi.log
+```
+
+* Nginx configuration
+
+```
+server {
+	listen 		80;
+	#server_name 	localhost;
+
+	location /api { try_files $uri @app; }
+	location @app {
+        include		uwsgi_params;
+        uwsgi_pass	unix:/<expense-tracker>/backend/expense-tracker-api.sock;
+    }
+}
+```
