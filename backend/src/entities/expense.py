@@ -48,8 +48,7 @@ class CategoryGroupSchema(Schema):
 class ExpenseDailyReportSchema(Schema):
     mean = fields.Float()
     median = fields.Float()
-    top3CatAmount = fields.Nested(CategoryGroupSchema, many=True)
-    top3CatCount = fields.Nested(CategoryGroupSchema, many=True)
+    topCategories = fields.Nested(CategoryGroupSchema, many=True)
 
 
 class MonthGroupSchema(Schema):
@@ -59,7 +58,7 @@ class MonthGroupSchema(Schema):
 
 class ExpenseMonthlyReportSchema(Schema):
     thisMonthTotal = fields.Float()
-    last5Months = fields.Nested(MonthGroupSchema, many=True)
+    monthlyTrend = fields.Nested(MonthGroupSchema, many=True)
 
 
 ExpenseSchemaType = Union[BaseSchema, ExpenseSchema]

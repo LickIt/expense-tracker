@@ -14,9 +14,6 @@
 }
 
 @media (max-width: 440px) {
-    .category-list {
-        flex-direction: column;
-    }
     .mat-card {
         max-width: calc(100% - 4rem);
     }

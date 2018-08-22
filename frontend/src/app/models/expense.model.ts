@@ -28,8 +28,7 @@ export class ExpenseDailyReport {
     constructor(
         public mean: number,
         public median: number,
-        public top3CatAmount: ExpenseCategoryGroup[],
-        public top3CatCount: ExpenseCategoryGroup[]
+        public topCategories: ExpenseCategoryGroup[]
     ) { }
 }
 
@@ -43,6 +42,6 @@ class ExpenseMonthGroup {
 export class ExpenseMonthlyReport {
     constructor(
         public thisMonthTotal: number,
-        public last5Months: ExpenseMonthGroup[]
+        public monthlyTrend: ExpenseMonthGroup[]
     ) { }
 }

@@ -31,7 +31,7 @@ export class ChartsComponent implements OnInit {
     ngOnInit() {
         Chart.defaults.global.defaultFontFamily = 'Roboto,"Helvetica Neue",sans-serif';
         Chart.defaults.global.defaultFontSize = 14;
-        Chart.defaults.global.defaultFontColor = 'black';
+        Chart.defaults.global.defaultFontColor = 'rgba(0,0,0,.87)';
 
         // default range is start of month to now
         const now = new Date();
@@ -85,8 +85,8 @@ export class ChartsComponent implements OnInit {
         const data: ChartData = {
             labels: this.reportData.map((r: any) => r.category.name),
             datasets: [{
-                'data': this.reportData.map(r => r.amount),
-                'backgroundColor': this.reportData.map((r: any) => r.category.color),
+                data: this.reportData.map(r => r.amount),
+                backgroundColor: this.reportData.map((r: any) => r.category.color),
             }]
         };
 

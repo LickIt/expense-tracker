@@ -60,20 +60,21 @@ class ExpenseService(DataService):
         return schema.dump(expenses).data
 
     def get_daily_expense_report(self, userid: int) -> Dict[str, Any]:
-        _from = datetime.today() - timedelta(days=30)
+        _days = 30
+        _from = datetime.today() - timedelta(days=_days)
         filters = [Expense.userid == userid, Expense.timestamp >= _from]
 
         # transaction count
         count = self.session \
             .query(func.count(Expense.id)) \
             .filter(*filters) \
-            .scalar()
+            .scalar() or 1
 
         # mean value (average)
         mean = self.session \
             .query(func.sum(Expense.amount)) \
             .filter(*filters) \
-            .scalar()
+            .scalar() or 0
         mean = mean / count
 
         # median value
@@ -85,44 +86,37 @@ class ExpenseService(DataService):
             .limit(1 if count % 2 == 1 else 2) \
             .all()
         median = [x[0] for x in median]
-        median = sum(median) / len(median)
+        median = sum(median) / (len(median) or 1)
 
         # category groups
+        amount = func.sum(Expense.amount)
         cats = self.session \
             .query(
                 Expense.categoryid,
-                func.sum(Expense.amount),
-                func.count(Expense.id)
+                amount
             ) \
             .filter(*filters) \
             .group_by(Expense.categoryid) \
+            .order_by(amount.desc()) \
+            .limit(5) \
             .all()
-
-        # top 3 categories by amount
-        top3amount = sorted(cats, key=(lambda c: c[1]), reverse=True)[:3]
-        top3amount = [{"categoryid": c[0], "value": c[1]} for c in top3amount]
-
-        # top 3 categories by transaction count
-        top3count = sorted(cats, key=(lambda c: c[2]), reverse=True)[:3]
-        top3count = [{"categoryid": c[0], "value": c[2]} for c in top3count]
+        cats = [{"categoryid": c[0], "value": round(c[1] / _days, 2)} for c in cats]
 
         report: ExpenseDailyReportSchemaType = ExpenseDailyReportSchema()
         return report.dump({
             "mean": mean,
             "median": median,
-            "top3CatAmount": top3amount,
-            "top3CatCount": top3count
+            "topCategories": cats
         }).data
 
     def get_monthly_expense_report(self, userid: int) -> Dict[str, Any]:
         user_filter = Expense.userid == userid
         _month_start = datetime.today().replace(day=1)
-        print(_month_start)
 
         total = self.session \
             .query(func.sum(Expense.amount)) \
             .filter(user_filter, Expense.timestamp >= _month_start) \
-            .scalar()
+            .scalar() or 0
 
         # month = func.month(Expense.timestamp).label("month")
         month = func.strftime("%m", Expense.timestamp).label("month")
@@ -139,5 +133,5 @@ class ExpenseService(DataService):
         report: ExpenseMonthlyReportSchemaType = ExpenseMonthlyReportSchema()
         return report.dump({
             "thisMonthTotal": total,
-            "last5Months": average
+            "monthlyTrend": average
         }).data
