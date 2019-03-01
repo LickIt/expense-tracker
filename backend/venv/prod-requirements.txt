@@ -1,7 +1,7 @@
-wheel
 sqlalchemy
 flask
 marshmallow
 flask-cors
 pyjwt
 uwsgi
+psycopg2-binary

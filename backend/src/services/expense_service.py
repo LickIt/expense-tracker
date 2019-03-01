@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Dict, Any
 from datetime import datetime, timedelta
-from ..entities import Expense, ExpenseSchema, ExpenseSchemaType, \
+from ..entities import engine, Expense, ExpenseSchema, ExpenseSchemaType, \
     ExpenseCategoryReportSchema, ExpenseCategoryReportSchemaType, \
     ExpenseDailyReportSchema, ExpenseDailyReportSchemaType, \
     ExpenseMonthlyReportSchema, ExpenseMonthlyReportSchemaType
@@ -118,10 +118,14 @@ class ExpenseService(DataService):
             .filter(user_filter, Expense.timestamp >= _month_start) \
             .scalar() or 0
 
-        # month = func.month(Expense.timestamp).label("month")
-        month = func.strftime("%m", Expense.timestamp).label("month")
+        month = Expense.timestamp
+        if engine.name == "sqlite":
+            month = func.strftime("%m", Expense.timestamp)
+        elif engine.name == "postgresql":
+            month = func.extract("month", Expense.timestamp)
+
         average = self.session \
-            .query(month, func.sum(Expense.amount).label("sum")) \
+            .query(month.label("month"), func.sum(Expense.amount).label("sum")) \
             .filter(user_filter) \
             .group_by(month) \
             .order_by(month.desc()) \

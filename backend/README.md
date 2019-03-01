@@ -13,7 +13,7 @@ _You may need the `python3.6-dev` package installed for the `uwsgi` server._
 
 * Run the flask application with
 ```bash
-./run.sh
+make run
 ```
 
 ## Production
@@ -23,20 +23,22 @@ To run in production behind nginx:
 
 ```bash
 source venv/dev/bin/activate
-uwsgi --ini util/uwsgi.ini --uid www-data --gid www-data --daemonize /var/log/uwsgi.log
+
+uwsgi --ini util/uwsgi.ini
 ```
 
-* Nginx configuration
+## Creating users
 
+You can only create users from within the local deployment environment.
+
+### Development
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{ "username": "<user>", "password": "<password>", "role": "user" }' http://127.0.0.1:5000/api/users
 ```
-server {
-	listen 		80;
-	#server_name 	localhost;
 
-	location /api { try_files $uri @app; }
-	location @app {
-        include		uwsgi_params;
-        uwsgi_pass	unix:/<expense-tracker>/backend/expense-tracker-api.sock;
-    }
-}
+### Production
+
+```bash
+docker exec -it <container> curl -X POST -H "Content-Type: application/json" -d '{ "username": "<user>", "password": "<password>", "role": "user" }' http://127.0.0.1/api/users
 ```
