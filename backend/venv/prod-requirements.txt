@@ -1,0 +1,7 @@
+wheel
+sqlalchemy
+flask
+marshmallow
+flask-cors
+pyjwt
+uwsgi

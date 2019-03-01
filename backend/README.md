@@ -4,9 +4,10 @@ API for managing expenses written in python. Uses `flask` for REST queries and `
 
 ## Development
 
-* Install `pipenv` and create an environment with:
+* Install `venv` and create an environment with:
 ```bash
-PIPENV_VENV_IN_PROJECT=true pipenv install
+python3 -m venv venv/dev
+source venv/dev/bin/activate
 ```
 _You may need the `python3.6-dev` package installed for the `uwsgi` server._
 
@@ -21,7 +22,8 @@ To run in production behind nginx:
 * Start uwsgi (preferably as a service)
 
 ```bash
-pipenv run uwsgi --ini util/uwsgi.ini --uid www-data --gid www-data --daemonize /var/log/uwsgi.log
+source venv/dev/bin/activate
+uwsgi --ini util/uwsgi.ini --uid www-data --gid www-data --daemonize /var/log/uwsgi.log
 ```
 
 * Nginx configuration
