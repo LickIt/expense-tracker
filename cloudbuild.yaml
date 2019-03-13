@@ -1,0 +1,12 @@
+steps:
+- name: "gcr.io/cloud-builders/docker"
+  args: ["build", "-t", "us.gcr.io/$PROJECT_ID/frontend", "-f", "frontend/docker/Dockerfile", "frontend"]
+- name: "gcr.io/cloud-builders/docker"
+  args: ["build", "-t", "us.gcr.io/$PROJECT_ID/backend", "-f", "backend/docker/Dockerfile", "backend"]
+- name: "gcr.io/cloud-builders/docker"
+  args: ["build", "-t", "us.gcr.io/$PROJECT_ID/reverse-proxy", "-f", "reverse-proxy/Dockerfile", "reverse-proxy"]
+
+images:
+- "us.gcr.io/$PROJECT_ID/frontend"
+- "us.gcr.io/$PROJECT_ID/backend"
+- "us.gcr.io/$PROJECT_ID/reverse-proxy"

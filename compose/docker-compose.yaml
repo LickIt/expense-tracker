@@ -1,0 +1,39 @@
+version: "3.2"
+services:
+    backend:
+        image: backend
+        restart: always
+        environment:
+            - DB_CONNECTION=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database/${POSTGRES_DB}
+    frontend:
+        image: frontend
+        restart: always
+        environment:
+            - API_URL=https://${SERVER_NAME}/api
+    database:
+        image: postgres:alpine
+        restart: always
+        volumes:
+            - ${DATABASE_PATH}:/var/lib/postgresql/data
+        environment:
+            - PGDATA=/var/lib/postgresql/data/pgdata
+            - POSTGRES_USER
+            - POSTGRES_PASSWORD
+            - POSTGRES_DB
+    reverse-proxy:
+        image: reverse-proxy
+        restart: always
+        secrets:
+            - ssl-certificate
+            - ssl-certificate-key
+        environment:
+            - SSL_CERTIFICATE=/run/secrets/ssl-certificate
+            - SSL_CERTIFICATE_KEY=/run/secrets/ssl-certificate-key
+        ports:
+            - "80:80"
+            - "443:443"
+secrets:
+    ssl-certificate:
+        file: ${SSL_CERTIFICATE}
+    ssl-certificate-key:
+        file: ${SSL_CERTIFICATE_KEY}

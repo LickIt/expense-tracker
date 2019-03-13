@@ -18,27 +18,18 @@ sudo npm install -g @angular/cli
 yarn install --pure-lockfile
 yarn start
 ```
+or
+```bash
+make run
+```
 
 ## Production
 
 * Make a build
 ```bash
 yarn build
-cd dist
-tar -cvzf expense-tracker-<version>.tgz *
 ```
-
-* Nginx configuration
-
-```
-server {
-	listen 		80;
-	#server_name 	localhost;
-	index		index.html;
-
-	location / {
-		alias /<expense-tracker>/frontend/;
-		try_files $uri $uri/ /index.html;
-	}
-}
+or
+```bash
+make dist
 ```

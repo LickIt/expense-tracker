@@ -1,6 +1,5 @@
 .secret
 expense-tracker.db
-expense-tracker-api.sock
 venv/dev
 venv/prod
 
