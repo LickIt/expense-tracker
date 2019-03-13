@@ -3,7 +3,7 @@ FROM node as build
 WORKDIR /src
 COPY . .
 
-RUN npm install
+RUN npm ci
 RUN npm run-script build
 
 FROM nginx:alpine
