@@ -51,6 +51,13 @@ steps:
           "compute", "ssh",
           "giliev91@instance-1", "--zone", "us-east1-b",
           "--command",
+          "cd /mnt/disks/persist/compose && ./docker-compose.sh pull"
+        ]
+- name: "gcr.io/cloud-builders/gcloud"
+  args: [
+          "compute", "ssh",
+          "giliev91@instance-1", "--zone", "us-east1-b",
+          "--command",
           "cd /mnt/disks/persist/compose && ./docker-compose.sh up -d"
         ]
 
