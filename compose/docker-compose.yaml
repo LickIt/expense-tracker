@@ -1,12 +1,12 @@
 version: "3.2"
 services:
     backend:
-        image: backend
+        image: us.gcr.io/${PROJECT_ID}/backend:latest
         restart: always
         environment:
             - DB_CONNECTION=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database/${POSTGRES_DB}
     frontend:
-        image: frontend
+        image: us.gcr.io/${PROJECT_ID}/frontend:latest
         restart: always
         environment:
             - API_URL=https://${SERVER_NAME}/api
@@ -21,7 +21,7 @@ services:
             - POSTGRES_PASSWORD
             - POSTGRES_DB
     reverse-proxy:
-        image: reverse-proxy
+        image: us.gcr.io/${PROJECT_ID}/reverse-proxy:latest
         restart: always
         secrets:
             - ssl-certificate
