@@ -34,22 +34,22 @@ steps:
         ]
 - name: "gcr.io/cloud-builders/gcloud"
   args: [
-          "compute", "scp", "--recurse",
-          "compose",
-          "instance-1:/mnt/disks/persist/",
+          "compute", "scp",
+          "--recurse", "compose",
+          "giliev91@instance-1:/mnt/disks/persist/",
           "--zone", "us-east1-b"
         ]
 - name: "gcr.io/cloud-builders/gcloud"
   args: [
           "compute", "ssh",
-          "instance-1", "--zone", "us-east1-b",
+          "giliev91@instance-1", "--zone", "us-east1-b",
           "--command",
           "cd /mnt/disks/persist/compose && ./docker-compose.sh down"
         ]
 - name: "gcr.io/cloud-builders/gcloud"
   args: [
           "compute", "ssh",
-          "instance-1", "--zone", "us-east1-b",
+          "giliev91@instance-1", "--zone", "us-east1-b",
           "--command",
           "cd /mnt/disks/persist/compose && ./docker-compose.sh up -d"
         ]
