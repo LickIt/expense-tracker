@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ExpenseService } from '../../../services/expense.service';
-import { CategoryService } from '../../../services/category.service';
-import { AuthService } from '../../../services/auth.service';
-import { first, map, flatMap, tap } from 'rxjs/operators';
-import { Expense } from '../../../models/expense.model';
-import { Category } from '../../../models/category.model';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { MatTableDataSource, MatSort } from '@angular/material';
-import { DatePipe } from '@angular/common';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {ExpenseService} from '../../../services/expense.service';
+import {CategoryService} from '../../../services/category.service';
+import {first, flatMap, map, tap} from 'rxjs/operators';
+import {Expense} from '../../../models/expense.model';
+import {Category} from '../../../models/category.model';
+import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
+import {MatSort, MatTableDataSource} from '@angular/material';
+import {DatePipe} from '@angular/common';
 
 @Component({
     selector: 'app-expense-list',
@@ -26,7 +25,6 @@ export class ExpenseListComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(
-        private authService: AuthService,
         private expenseService: ExpenseService,
         private categoryService: CategoryService,
         private breakpointObserver: BreakpointObserver,
@@ -55,8 +53,10 @@ export class ExpenseListComponent implements OnInit {
         // custom sorting for category
         this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {
-                case 'category': return (<any>item).category.name;
-                default: return item[property];
+                case 'category':
+                    return (<any>item).category.name;
+                default:
+                    return item[property];
             }
         };
         this.dataSource.sort = this.sort;
@@ -100,10 +100,9 @@ export class ExpenseListComponent implements OnInit {
         // add 1 day to make the interval inclusive
         const toDate = new Date(this.toDate.getFullYear(), this.toDate.getMonth(), this.toDate.getDate() + 1);
         let categoriesMap: Map<number, Category>;
-        const userid = this.authService.getLoggedInUserId();
 
         // get categories
-        this.categoryService.getCategories(userid)
+        this.categoryService.getCategories()
             .pipe(
                 first(),
                 // add categories to map
@@ -114,11 +113,11 @@ export class ExpenseListComponent implements OnInit {
                     }, new Map<number, Category>());
                 }),
                 // get expenses
-                flatMap(_ => this.expenseService.getExpenses(userid, this.fromDate, toDate)),
+                flatMap(_ => this.expenseService.getExpenses(this.fromDate, toDate)),
                 first(),
                 map(expenses => {
                     for (const expense of expenses) {
-                        (<any>expense).category = categoriesMap.get(expense.categoryid);
+                        (<any>expense).category = categoriesMap.get(expense.categoryId);
                     }
 
                     return expenses;

@@ -1,10 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { Router } from '@angular/router';
-import { User } from '../models/user.model';
-import { throwError, Subject, Observable, of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {environment} from '../../environments/environment';
+import {User} from '../models/user.model';
+import {Subject} from 'rxjs';
 
 
 @Injectable()
@@ -13,18 +10,24 @@ export class AuthService {
     public logoutEvent = new Subject<void>();
     private loggedInUser: User = null;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor() {
+    }
 
-    public login(username: string, password: string): Observable<any> {
-        return this.http.post<any>(`${environment.apiUrl}/auth/login`, { username: username, password: password })
-            .pipe(tap(user => {
-                // login successful if there's a jwt token in the response
-                if (user && user.token) {
-                    localStorage.setItem('jwt-token', user.token);
-                    this.loggedInUser = user;
-                    this.loginEvent.next(user.token);
-                }
-            }));
+    public redirectToLogin(): void {
+        const redirectUri = `${window.location.origin}/login`;
+        let loginUrl = `${environment.authUrl}/oauth2/authorize`;
+        loginUrl += `?client_id=${environment.clientId}`;
+        loginUrl += `&redirect_uri=${encodeURIComponent(redirectUri)}`;
+        loginUrl += `&response_type=token`;
+        loginUrl += `&response_mode=query`;
+
+        window.location.href = loginUrl;
+    }
+
+    public login(accessToken: string): void {
+        localStorage.setItem('jwt-token', accessToken);
+        this.loggedInUser = AuthService.getUserFromToken(accessToken);
+        this.loginEvent.next(accessToken);
     }
 
     public logout(redirect: boolean = false): void {
@@ -33,7 +36,13 @@ export class AuthService {
         this.logoutEvent.next();
 
         if (redirect) {
-            this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.url } });
+            const redirectUri = `${window.location.origin}/login`;
+            let logoutUrl = `${environment.authUrl}/logout`;
+            logoutUrl += `?response_type=token`;
+            logoutUrl += `&client_id=${environment.clientId}`;
+            logoutUrl += `&redirect_uri=${encodeURIComponent(redirectUri)}`;
+
+            window.location.href = logoutUrl;
         }
     }
 
@@ -41,30 +50,25 @@ export class AuthService {
         return localStorage.getItem('jwt-token');
     }
 
-    public getLoggedInUser(): Observable<User> {
+    public getLoggedInUser(): User | undefined {
         if (this.loggedInUser) {
-            return of(this.loggedInUser);
+            return this.loggedInUser;
         }
 
         const token = this.getToken();
         if (token) {
-            return this.http.get<User>(`${environment.apiUrl}/auth/loggedin`)
-                .pipe(tap(user => this.loggedInUser = user));
+            let user = AuthService.getUserFromToken(token);
+            this.loggedInUser = user;
+            return user;
         }
-
-        return throwError('Not logged in!');
     }
 
-    public getLoggedInUserId(): number {
-        const token = this.getToken();
-        if (token) {
-            return this.decodeJwtToken(token).userid;
-        }
-
-        throw Error('Not logged in!');
+    private static getUserFromToken(token: string): User {
+        const decoded = AuthService.decodeJwtToken(token)
+        return new User(decoded.username);
     }
 
-    private decodeJwtToken(token: string): any {
+    private static decodeJwtToken(token: string): any {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace('-', '+').replace('_', '/');
         return JSON.parse(window.atob(base64));
