@@ -10,7 +10,15 @@ export class AuthService {
     public logoutEvent = new Subject<void>();
     private loggedInUser: User = null;
 
-    constructor() {
+    private static getUserFromToken(token: string): User {
+        const decoded = AuthService.decodeJwtToken(token);
+        return new User(decoded.username);
+    }
+
+    private static decodeJwtToken(token: string): any {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace('-', '+').replace('_', '/');
+        return JSON.parse(window.atob(base64));
     }
 
     public redirectToLogin(): void {
@@ -57,20 +65,9 @@ export class AuthService {
 
         const token = this.getToken();
         if (token) {
-            let user = AuthService.getUserFromToken(token);
+            const user = AuthService.getUserFromToken(token);
             this.loggedInUser = user;
             return user;
         }
-    }
-
-    private static getUserFromToken(token: string): User {
-        const decoded = AuthService.decodeJwtToken(token)
-        return new User(decoded.username);
-    }
-
-    private static decodeJwtToken(token: string): any {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace('-', '+').replace('_', '/');
-        return JSON.parse(window.atob(base64));
     }
 }

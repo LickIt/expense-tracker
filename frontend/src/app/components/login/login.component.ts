@@ -24,10 +24,10 @@ export class LoginComponent implements OnInit {
             if (matches && matches[1]) {
                 const accessToken = matches[1];
                 this.authService.login(accessToken);
-                this.router.navigate(["/"]);
+                this.router.navigate(['/']);
             }
         } else {
-            this.authService.redirectToLogin()
+            this.authService.redirectToLogin();
         }
     }
 }

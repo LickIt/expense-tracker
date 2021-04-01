@@ -69,7 +69,7 @@ export class CategoryEditComponent implements OnInit {
             .subscribe(
                 category => this.router.navigate(['/category']),
                 error => {
-                    this.error = (error.error && error.error.message) || error
+                    this.error = (error.error && error.error.message) || error;
                     this.saving = false;
                 }
             );

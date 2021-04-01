@@ -49,7 +49,7 @@ export class ExpenseAddComponent implements OnInit {
             .subscribe(
                 _expense => this.router.navigate(['/expense']),
                 error => {
-                    this.error = (error.error && error.error.message) || error
+                    this.error = (error.error && error.error.message) || error;
                     this.saving = false;
                 }
             );
