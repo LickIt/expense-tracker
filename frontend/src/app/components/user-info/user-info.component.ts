@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { first } from 'rxjs/operators';
-import { User } from '../../models/user.model';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from '../../services/auth.service';
+import {User} from '../../models/user.model';
 
 @Component({
     selector: 'app-user-info',
@@ -11,7 +10,8 @@ import { User } from '../../models/user.model';
 export class UserInfoComponent implements OnInit {
     public user?: User;
 
-    constructor(private authService: AuthService) { }
+    constructor(private authService: AuthService) {
+    }
 
     public ngOnInit() {
         if (this.authService.getToken()) {
@@ -19,20 +19,15 @@ export class UserInfoComponent implements OnInit {
         }
 
         // update user on login / logout
-        this.authService.loginEvent.subscribe(_token => {
-            this.getLoggedInUser();
-        });
-
-        this.authService.logoutEvent.subscribe(_ => this.user = null);
+        this.authService.loginEvent.subscribe(() => this.getLoggedInUser());
+        this.authService.logoutEvent.subscribe(() => this.user = null);
     }
 
     public logout() {
         this.authService.logout(true);
     }
 
-    private getLoggedInUser() {
-        this.authService.getLoggedInUser()
-            .pipe(first())
-            .subscribe(user => this.user = user);
+    private getLoggedInUser(): void {
+        this.user = this.authService.getLoggedInUser();
     }
 }

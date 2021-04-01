@@ -1,13 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Chart, ChartData } from 'chart.js';
-import { AuthService } from '../../services/auth.service';
-import { ExpenseService } from '../../services/expense.service';
-import { CategoryService } from '../../services/category.service';
-import { first, flatMap, map } from 'rxjs/operators';
-import { tap } from 'rxjs/internal/operators/tap';
-import { Category } from '../../models/category.model';
-import { ExpenseCategoryReport } from '../../models/expense.model';
-import { MatDatepickerInputEvent } from '@angular/material';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Chart, ChartData} from 'chart.js';
+import {AuthService} from '../../services/auth.service';
+import {ExpenseService} from '../../services/expense.service';
+import {CategoryService} from '../../services/category.service';
+import {first, flatMap, map} from 'rxjs/operators';
+import {tap} from 'rxjs/internal/operators/tap';
+import {Category} from '../../models/category.model';
+import {ExpenseCategoryReport} from '../../models/expense.model';
 
 @Component({
     selector: 'app-charts',
@@ -26,7 +25,8 @@ export class ChartsComponent implements OnInit {
         private authService: AuthService,
         private expenseService: ExpenseService,
         private categoryService: CategoryService,
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
         Chart.defaults.global.defaultFontFamily = 'Roboto,"Helvetica Neue",sans-serif';
@@ -44,10 +44,9 @@ export class ChartsComponent implements OnInit {
     load() {
         const toDate = new Date(this.toDate.getFullYear(), this.toDate.getMonth(), this.toDate.getDate() + 1);
         let categoriesMap: Map<number, Category>;
-        const userid = this.authService.getLoggedInUserId();
 
         // get categories
-        this.categoryService.getCategories(userid)
+        this.categoryService.getCategories()
             .pipe(
                 first(),
                 // add categories to map
@@ -58,11 +57,11 @@ export class ChartsComponent implements OnInit {
                     }, new Map<number, Category>());
                 }),
                 // get expenses
-                flatMap(_ => this.expenseService.getExpenseByCategoryReport(userid, this.fromDate, toDate)),
+                flatMap(_ => this.expenseService.getExpenseByCategoryReport(this.fromDate, toDate)),
                 first(),
                 map(expenses => {
                     for (const expense of expenses) {
-                        (<any>expense).category = categoriesMap.get(expense.categoryid);
+                        (<any>expense).category = categoriesMap.get(expense.categoryId);
                     }
 
                     return expenses;

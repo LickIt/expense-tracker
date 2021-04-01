@@ -40,11 +40,10 @@ export class HomeComponent implements OnInit {
         Chart.defaults.global.defaultFontSize = 14;
         Chart.defaults.global.defaultFontColor = 'rgba(0,0,0,.87)';
 
-        const userid = this.authService.getLoggedInUserId();
         forkJoin(
-            this.expenseService.getDailyExpenseReport(userid).pipe(first()),
-            this.expenseService.getMonthlyExpenseReport(userid).pipe(first()),
-            this.categoryService.getCategories(userid).pipe(first())
+            this.expenseService.getDailyExpenseReport().pipe(first()),
+            this.expenseService.getMonthlyExpenseReport().pipe(first()),
+            this.categoryService.getCategories().pipe(first())
         ).subscribe(
             data => {
                 this.dailyReportData = data[0];
@@ -64,10 +63,10 @@ export class HomeComponent implements OnInit {
         const chartCtx = this.dailyChartElement.nativeElement.getContext('2d');
 
         const data: ChartData = {
-            labels: this.dailyReportData.topCategories.map(x => this.categoryMap.get(x.categoryid).name),
+            labels: this.dailyReportData.topCategories.map(x => this.categoryMap.get(x.categoryId).name),
             datasets: [{
                 data: this.dailyReportData.topCategories.map(x => x.value),
-                backgroundColor: this.dailyReportData.topCategories.map(x => this.categoryMap.get(x.categoryid).color)
+                backgroundColor: this.dailyReportData.topCategories.map(x => this.categoryMap.get(x.categoryId).color)
             }]
         };
 

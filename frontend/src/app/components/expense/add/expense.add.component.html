@@ -8,7 +8,7 @@
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <mat-form-field>
-        <mat-select placeholder="Category" formControlName="categoryid" required>
+        <mat-select placeholder="Category" formControlName="categoryId" required>
             <mat-option *ngFor="let category of categories" [value]="category.id">
                 <span class="category-color" [style.background-color]="category.color || 'lightgray'"></span>
                 <span class="valign-middle">{{ category.name }}</span>

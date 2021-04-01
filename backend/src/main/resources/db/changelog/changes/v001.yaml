@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-category-deleted-column
+      author: giliev
+      changes:
+        - addColumn:
+            tableName: category
+            columns:
+              - column:
+                  name: deleted
+                  type: BOOLEAN
+                  defaultValue: "false"
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: category
+            indexName: category_deleted_index
+            columns:
+              - column:
+                  name: deleted

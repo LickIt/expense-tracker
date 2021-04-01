@@ -7,6 +7,9 @@
         <a [routerLink]="['/category/edit', category.id]" mat-icon-button>
             <mat-icon>edit</mat-icon>
         </a>
+        <button mat-icon-button type="button" (click)="onDeleteClick(category)">
+            <mat-icon>delete</mat-icon>
+        </button>
         <mat-divider [inset]="true" *ngIf="!last"></mat-divider>
     </mat-list-item>
     <mat-divider></mat-divider>

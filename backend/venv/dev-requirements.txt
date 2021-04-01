@@ -1,4 +1,0 @@
--r prod-requirements.txt
-
-pylint
-autopep8

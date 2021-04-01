@@ -1,53 +1,58 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { Expense, ExpenseCategoryReport, ExpenseDailyReport, ExpenseMonthlyReport } from '../models/expense.model';
-import { AuthService } from './auth.service';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {Expense, ExpenseCategoryReport, ExpenseDailyReport, ExpenseMonthlyReport} from '../models/expense.model';
+import {map} from 'rxjs/operators';
 
 
 @Injectable()
 export class ExpenseService {
-    constructor(private http: HttpClient, private authService: AuthService) {
+    constructor(private http: HttpClient) {
     }
 
-    public getExpenses(userid: number, from?: Date, to?: Date): Observable<Expense[]> {
+    private static toLocalDate(date: Date): string {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    public getExpenses(from?: Date, to?: Date): Observable<Expense[]> {
         let params = new HttpParams();
         if (from) {
-            params = params.set('from', this.dateToUnixTimestamp(from).toString());
+            params = params.set('from', ExpenseService.toLocalDate(from));
         }
         if (to) {
-            params = params.set('to', this.dateToUnixTimestamp(to).toString());
+            params = params.set('to', ExpenseService.toLocalDate(to));
         }
 
-        return this.http.get<Expense[]>(`${environment.apiUrl}/user/${userid}/expenses`, { params });
+        return this.http.get<{ ['expenses']: Expense[] }>(`${environment.apiUrl}/expenses`, {params})
+            .pipe(map(e => e.expenses));
     }
 
-    public createExpense(userid: number, expense: Expense): Observable<Expense> {
-        return this.http.post<Expense>(`${environment.apiUrl}/user/${userid}/expenses`, expense);
+    public createExpense(expense: Expense): Observable<Expense> {
+        return this.http.post<Expense>(`${environment.apiUrl}/expenses`, expense);
     }
 
-    public getExpenseByCategoryReport(userid: number, from?: Date, to?: Date): Observable<ExpenseCategoryReport[]> {
+    public getExpenseByCategoryReport(from?: Date, to?: Date): Observable<ExpenseCategoryReport[]> {
         let params = new HttpParams();
         if (from) {
-            params = params.set('from', this.dateToUnixTimestamp(from).toString());
+            params = params.set('from', ExpenseService.toLocalDate(from));
         }
         if (to) {
-            params = params.set('to', this.dateToUnixTimestamp(to).toString());
+            params = params.set('to', ExpenseService.toLocalDate(to));
         }
 
-        return this.http.get<ExpenseCategoryReport[]>(`${environment.apiUrl}/user/${userid}/expenses/category-report`, { params });
+        return this.http.get<{ ['categories']: ExpenseCategoryReport[] }>(`${environment.apiUrl}/expenses/category-report`, {params})
+            .pipe(map(e => e.categories));
     }
 
-    public getDailyExpenseReport(userid: number) {
-        return this.http.get<ExpenseDailyReport>(`${environment.apiUrl}/user/${userid}/expenses/daily-report`);
+    public getDailyExpenseReport() {
+        return this.http.get<ExpenseDailyReport>(`${environment.apiUrl}/expenses/daily-report`);
     }
 
-    public getMonthlyExpenseReport(userid: number) {
-        return this.http.get<ExpenseMonthlyReport>(`${environment.apiUrl}/user/${userid}/expenses/monthly-report`);
-    }
-
-    private dateToUnixTimestamp(date: Date): number {
-        return Math.floor(date.getTime() / 1000);
+    public getMonthlyExpenseReport() {
+        return this.http.get<ExpenseMonthlyReport>(`${environment.apiUrl}/expenses/monthly-report`);
     }
 }

@@ -1,0 +1,43 @@
+spring:
+  profiles:
+    active: development
+  jpa:
+    database: postgresql
+    open-in-view: false
+  datasource:
+    url: jdbc:postgresql://${postgres.host}:${postgres.port:5432}/${postgres.db}
+    username: ${postgres.user}
+    password: ${postgres.password}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_rBKqU9nvt
+  mvc:
+    format:
+      date: iso
+      date-time: iso
+server:
+  error:
+    include-message: always
+  forward-headers-strategy: framework
+  port: 5000
+---
+
+spring:
+  config:
+    activate:
+      on-profile: development
+  datasource:
+    url: jdbc:postgresql://localhost/expensetracker
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: ${show.sql:false}
+    properties:
+      hibernate:
+        format_sql: ${show.sql:false}
